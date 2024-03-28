@@ -4,11 +4,19 @@ const app = express();
 
 
 app.set("view engine", "ejs");
+app.use(express.json());
 app.set("views", path.join(__dirname, "views"));
 
-app.get('/', (req, res) => {
-    res.render('home');
-})
+// Static Files
+app.use(express.static('public'));
+
+// Routes
+app.use('/', require('./server/routes/exchange'))
+
+// Handle 404
+app.get('*', (req, res) => {
+    res.status(404).render('404');
+});
 
 const PORT = process.env.PORT || 3000;
 

@@ -49,58 +49,13 @@
         </div>
     </div>
     
+    <script src="/js/homepage.js"></script> 
     <script>
-        async function fetchCurrencies() {
-            try {
-                const response = await fetch('https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies.json');
-                const data = await response.json();
-                const fromCurrencyDropdown = document.getElementById('fromCurrency');
-                const toCurrencyDropdown = document.getElementById('toCurrency');
-                const currencyInfo = document.getElementById('currencyInfo');
+        document.getElementById('currencyForm').addEventListener('submit', convertCurrency);
 
-                function updateCurrencyInfo() {
-                    const fromCurrency = fromCurrencyDropdown.value;
-                    const toCurrency = toCurrencyDropdown.value;
-                    const fromCurrencyText = fromCurrencyDropdown.options[fromCurrencyDropdown.selectedIndex].textContent;
-                    const toCurrencyText = toCurrencyDropdown.options[toCurrencyDropdown.selectedIndex].textContent;
-
-                    currencyInfo.textContent = `1 ${fromCurrencyText} = ... ${toCurrencyText}`;
-                }
-
-                Object.keys(data).sort().forEach(currencyCode => {
-                    if (data[currencyCode] && currencyCode.length === 3) {
-                        const optionFrom = document.createElement('option');
-                        const optionTo = document.createElement('option');
-                        optionFrom.value = currencyCode;
-                        optionTo.value = currencyCode;
-                        optionFrom.textContent = `${data[currencyCode]} (${currencyCode.toUpperCase()})`;
-                        optionTo.textContent = `${data[currencyCode]} (${currencyCode.toUpperCase()})`;
-
-                        // Set default values for USD and EUR
-                        if (currencyCode.toLowerCase() === 'usd') {
-                            optionFrom.selected = true;
-                        }
-                        if (currencyCode.toLowerCase() === 'eur') {
-                            optionTo.selected = true;
-                        }
-
-                        fromCurrencyDropdown.appendChild(optionFrom);
-                        toCurrencyDropdown.appendChild(optionTo);
-                    }
-                });
-
-                fromCurrencyDropdown.addEventListener('change', updateCurrencyInfo);
-                toCurrencyDropdown.addEventListener('change', updateCurrencyInfo);
-
-                // Initialize the currency info text
-                updateCurrencyInfo();
-
-            } catch (error) {
-                console.error('Error fetching the currencies:', error);
-            }
-        }
-        
-        fetchCurrencies();
+        document.addEventListener('DOMContentLoaded', (event) => {
+            fetchCurrencies();
+        });
     </script>
 </body>
 </html>

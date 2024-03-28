@@ -6,7 +6,8 @@ const exchangeController = require('../controllers/exchangeController');
  * Currency exchange routes
  */
 
-router.get('/', exchangeController.index);
-
+router.get('/', exchangeController.exchange);
+router.get('/api/currencies', exchangeController.fetchCurrencies);
+router.post('/api/convertCurrency', exchangeController.convertCurrency);
 
 module.exports = router;
