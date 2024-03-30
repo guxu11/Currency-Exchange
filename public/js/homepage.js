@@ -5,6 +5,7 @@ async function fetchCurrencies() {
         const fromCurrencyDropdown = document.getElementById('fromCurrency');
         const toCurrencyDropdown = document.getElementById('toCurrency');
         const currencyInfo = document.getElementById('currencyInfo');
+        const resultField = document.getElementById('result');
 
         async function updateCurrencyInfo() {
             const fromCurrency = fromCurrencyDropdown.value;
@@ -19,7 +20,10 @@ async function fetchCurrencies() {
                 amountToShow = '?';
                 console.error('Error converting currency:', error);
             }
+            // Update the currency info text
             currencyInfo.textContent = `1 ${fromCurrencyText} = ${amountToShow} ${toCurrencyText}`;
+            // Clear the result field
+            resultField.value = '';
         }
 
         Object.keys(data).sort().forEach(currencyCode => {
@@ -35,7 +39,7 @@ async function fetchCurrencies() {
                 if (currencyCode.toLowerCase() === 'usd') {
                     optionFrom.selected = true;
                 }
-                if (currencyCode.toLowerCase() === 'eur') {
+                if (currencyCode.toLowerCase() === 'cnh') {
                     optionTo.selected = true;
                 }
 

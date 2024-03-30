@@ -4,7 +4,6 @@ const ApiService = require('../services/apiService');
 const apiService = new ApiService();
 
 const exchange = (req, res) => {
-
     res.render('home');
 };
 
