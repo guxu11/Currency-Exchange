@@ -1,7 +1,6 @@
 const CacheService = require('../services/nodeCacheService');
 const cacheService = new CacheService();
 const ApiService = require('../services/apiService');
-const { cache } = require('ejs');
 const apiService = new ApiService();
 
 const exchange = (req, res) => {
@@ -28,11 +27,11 @@ const fetchCurrencies = async (req, res) => {
 
 const convertCurrency = async (req, res) => {
     const { amount, fromCurrency, toCurrency } = req.body;
-    console.log(amount, fromCurrency, toCurrency);
     const today = new Date();
     const formattedDate = today.toISOString().split('T')[0];
     const key = cacheService.makeExchangeRateKey(fromCurrency, formattedDate);
-    console.log("key", key);
+    process.stdout.write(`key: ${key} `);
+
     let exchangeRates;
     if (cacheService.hasExchangeRate(key)) {
         console.log('Cache hit');
@@ -44,9 +43,7 @@ const convertCurrency = async (req, res) => {
         cacheService.setExchangeRateExpireToday(key, exchangeRates);
         // console.log(cacheService.cache.entries());
     }
-    console.log(exchangeRates);
     const convertedAmount = amount * exchangeRates[toCurrency];
-    console.log(convertedAmount);
     res.json({ convertedAmount });
 };
 

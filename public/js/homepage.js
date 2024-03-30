@@ -6,13 +6,20 @@ async function fetchCurrencies() {
         const toCurrencyDropdown = document.getElementById('toCurrency');
         const currencyInfo = document.getElementById('currencyInfo');
 
-        function updateCurrencyInfo() {
+        async function updateCurrencyInfo() {
             const fromCurrency = fromCurrencyDropdown.value;
             const toCurrency = toCurrencyDropdown.value;
             const fromCurrencyText = fromCurrencyDropdown.options[fromCurrencyDropdown.selectedIndex].textContent;
             const toCurrencyText = toCurrencyDropdown.options[toCurrencyDropdown.selectedIndex].textContent;
-
-            currencyInfo.textContent = `1 ${fromCurrencyText} = ... ${toCurrencyText}`;
+            let amountToShow;
+            try {
+                const result = await callConvertCurrencyApi(1, fromCurrency, toCurrency);
+                amountToShow = result.convertedAmount;
+            } catch (error) {
+                amountToShow = '?';
+                console.error('Error converting currency:', error);
+            }
+            currencyInfo.textContent = `1 ${fromCurrencyText} = ${amountToShow} ${toCurrencyText}`;
         }
 
         Object.keys(data).sort().forEach(currencyCode => {
@@ -49,27 +56,30 @@ async function fetchCurrencies() {
 }
 
 async function convertCurrency(event) {
-    event.preventDefault(); // 阻止表单默认提交行为
+    event.preventDefault(); // prohibit form from auto submitting
 
-    // 获取用户输入和选择的值
+    // Get the form data
     const amount = document.getElementById('amount').value;
     const fromCurrency = document.getElementById('fromCurrency').value;
     const toCurrency = document.getElementById('toCurrency').value;
 
-    // 发送数据到后端接口进行转换
+    // call backend API to get the conversion rate
     try {
-        const response = await fetch('/api/convertCurrency', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ amount, fromCurrency, toCurrency }),
-        });
-        const result = await response.json();
-
-        // 显示转换结果
+        const result = await callConvertCurrencyApi(amount, fromCurrency, toCurrency);
         document.getElementById('result').value = result.convertedAmount;
     } catch (error) {
         console.error('Error converting currency:', error);
     }
+}
+
+async function callConvertCurrencyApi(amount, fromCurrency, toCurrency) {
+    const response = await fetch('/api/convertCurrency', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ amount, fromCurrency, toCurrency }),
+    });
+    const data = await response.json();
+    return data;
 }
