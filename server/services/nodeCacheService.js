@@ -1,20 +1,28 @@
+/**
+ * CacheService: self implemented cache service
+ * The default expire time is today 23:59:59
+ */
+
 class CacheService {
   constructor() {
     this.cache = new Map();
     this.now = new Date();
-    this.checkExpire = setInterval(() => this.checkExpire(), 60000);
+    // check expire every minute
+    this.checkExpireEveryMin = setInterval(() => this.checkExpire(), 60000);
   }
 
   checkExpire() {
-    for (let key of this.cache.keys()) {
-      if (key.has["expireAt"] && key["expireAt"] <= now) {
-        this.cache.delete(key);
+    for (let [key, value] of this.cache.entries()) {
+      if (typeof value === 'object' && value !== null && 'expireAt' in value) {
+        if (value.expireAt <= this.now) {
+          this.cache.delete(key);
+      }
       }
     }
   }
 
   destroy() {
-    clearInterval(this.checkExpire);
+    clearInterval(this.checkExpireEveryMin);
   }
 
   makeCurrenciesKey() {
@@ -54,7 +62,6 @@ class CacheService {
   setExchangeRateExpireToday(key, value) {
     const expireDate = new Date(this.now.getFullYear(), this.now.getMonth(), this.now.getDate(), 23, 59, 59);
     this.cache.set(key, {"data": value, "expireAt": expireDate});
-    console.log("cache", this.cache);
   }
 
   setExchangeRateTtl(key, value, ttl) {

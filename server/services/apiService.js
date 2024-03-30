@@ -43,16 +43,13 @@ class ApiService {
   }
 
   filterNestedCurrencyData(data) {
-    // 创建一个新对象以存储过滤后的数据
     const filteredData = {};
     filteredData["date"] = data["date"];
-    // 遍历对象，跳过 "date" 键，只处理嵌套的对象
     Object.keys(data).forEach(key => {
       if (key !== 'date') {
         const nestedObject = data[key];
         filteredData[key] = {};
 
-        // 处理嵌套对象，保留符合货币代码格式的键值对
         Object.keys(nestedObject).forEach(nestedKey => {
           if (/^[a-z]{3}$/.test(nestedKey)) {
             filteredData[key][nestedKey] = nestedObject[nestedKey];
