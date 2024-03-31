@@ -50,9 +50,35 @@ const convertCurrency = async (req, res) => {
     res.json({ convertedAmount });
 };
 
+const fetchLast7DaysRates = async (req, res) => {
+    const { fromCurrency, toCurrency } = req.body;
+    console.log(fromCurrency, toCurrency);
+    const today = new Date();
+    const exchangeRates = {};
+    for (let i = 0; i < 7; i++) {
+        const date = new Date(today);
+        date.setDate(today.getDate() - i);
+        const formattedDate = date.toISOString().split('T')[0];
+        const key = cacheService.makeExchangeRateKey(fromCurrency, formattedDate);
+        if (cacheService.hasExchangeRate(key)) {
+            console.log('Cache hit');
+            exchangeRates[formattedDate] = cacheService.getExchangeRateJson(key)[toCurrency];
+        } else {
+            console.log('Cache miss');
+            const rawExchangeRates = await apiService.getExchangeRateByDate(formattedDate, fromCurrency);
+            const fromCurrencyRates = rawExchangeRates[fromCurrency];
+            exchangeRates[formattedDate] = fromCurrencyRates[toCurrency]
+            cacheService.setExchangeRateExpireToday(key, fromCurrencyRates);
+        }
+    }
+    console.log(exchangeRates);
+    res.json(exchangeRates);
+}
+
 module.exports = {
     exchange,
     fluctuate,
     fetchCurrencies,
-    convertCurrency
+    convertCurrency,
+    fetchLast7DaysRates
 };
