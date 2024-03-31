@@ -28,23 +28,30 @@
         <h1 class="h2">Trend</h1>
         <div class="d-flex">
             <select class="form-select me-2" id="fromCurrency">
-                <!-- Add other currencies as options here -->
             </select>
             <select class="form-select me-2" id="toCurrency">
-                <!-- Add other currencies as options here -->
             </select>
             <select class="form-select" id="timeframeSelect">
                 <option selected>Last 7 Days</option>
-                <!-- Add other timeframes as options here -->
             </select>
         </div>
     </div>
 
+    <div class="container">
+        <div id="chartContainer" class="loading-container">
+            <canvas id="currencyChart" width="400" height="200"></canvas>
+        </div>
+        <div id="loadingOverlay" class="loading-overlay" style="display: none;"></div>
+        <div id="loadingIndicator" class="loader" style="display: none;"></div>
+    </div>
 
+      
     <script src="/js/homepage.js"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
          document.addEventListener('DOMContentLoaded', (event) => {
             fetchCurrenciesAndFillSelect(null, null);
+            drawChart(fromCurrency, toCurrency);
         });
     </script>
 </body>

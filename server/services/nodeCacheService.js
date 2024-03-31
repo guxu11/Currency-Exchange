@@ -6,15 +6,15 @@
 class CacheService {
   constructor() {
     this.cache = new Map();
-    this.now = new Date();
     // check expire every minute
     this.checkExpireEveryMin = setInterval(() => this.checkExpire(), 60000);
   }
 
   checkExpire() {
+    let now = new Date();
     for (let [key, value] of this.cache.entries()) {
       if (typeof value === 'object' && value !== null && 'expireAt' in value) {
-        if (value.expireAt <= this.now) {
+        if (value.expireAt <= now) {
           this.cache.delete(key);
       }
       }
@@ -45,7 +45,8 @@ class CacheService {
   }
 
   setCurrenciesExpireToday(key, value) {
-    const expireDate = new Date(this.now.getFullYear(), this.now.getMonth(), this.now.getDate(), 23, 59, 59);
+    let now = new Date();
+    const expireDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
     this.cache.set(key, {"data": value, "expireAt": expireDate});
   }
 
@@ -60,7 +61,8 @@ class CacheService {
   }
 
   setExchangeRateExpireToday(key, value) {
-    const expireDate = new Date(this.now.getFullYear(), this.now.getMonth(), this.now.getDate(), 23, 59, 59);
+    let now = new Date();
+    const expireDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59);
     this.cache.set(key, {"data": value, "expireAt": expireDate});
   }
 

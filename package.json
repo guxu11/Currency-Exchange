@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
+  },
+  "jest": {
+    "testEnvironment": "node"
   },
   "author": "Xu Gu",
   "license": "ISC",
@@ -13,5 +16,8 @@
     "ejs": "^3.1.9",
     "express": "^4.19.2",
     "express-ejs-layouts": "^2.5.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0"
   }
 }
