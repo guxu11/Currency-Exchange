@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Rate Fluctuate</title>
+</head>
+<body>
+    <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+        <div class="position-sticky pt-3 sidebar-sticky">
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="bi bi-currency-dollar"></i>
+                Currency Converter
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="/fluctuate">
+                <i class="bi bi-graph-up"></i>
+                Currency Rate Fluctuate
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Trend</h1>
+        <div class="d-flex">
+            <select class="form-select me-2" id="fromCurrency">
+                <!-- Add other currencies as options here -->
+            </select>
+            <select class="form-select me-2" id="toCurrency">
+                <!-- Add other currencies as options here -->
+            </select>
+            <select class="form-select" id="timeframeSelect">
+                <option selected>Last 7 Days</option>
+                <!-- Add other timeframes as options here -->
+            </select>
+        </div>
+    </div>
+
+
+    <script src="/js/homepage.js"></script> 
+    <script>
+         document.addEventListener('DOMContentLoaded', (event) => {
+            fetchCurrenciesAndFillSelect(null, null);
+        });
+    </script>
+</body>
+</html>

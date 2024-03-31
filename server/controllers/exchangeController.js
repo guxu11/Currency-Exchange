@@ -4,8 +4,12 @@ const ApiService = require('../services/apiService');
 const apiService = new ApiService();
 
 const exchange = (req, res) => {
-    res.render('home');
+    res.render('homepage');
 };
+
+const fluctuate = (req, res) => {
+    res.render('fluctuate');
+}
 
 const fetchCurrencies = async (req, res) => {
     try {
@@ -48,6 +52,7 @@ const convertCurrency = async (req, res) => {
 
 module.exports = {
     exchange,
+    fluctuate,
     fetchCurrencies,
     convertCurrency
 };
