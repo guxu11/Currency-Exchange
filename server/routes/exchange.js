@@ -7,6 +7,7 @@ const exchangeController = require('../controllers/exchangeController');
  */
 
 router.get('/', exchangeController.exchange);
+router.get('/fluctuate', exchangeController.fluctuate)
 router.get('/api/currencies', exchangeController.fetchCurrencies);
 router.post('/api/convertCurrency', exchangeController.convertCurrency);
 

@@ -1,9 +1,8 @@
-async function fetchCurrencies() {
+async function fetchCurrenciesAndUpdateConvertPage() {
     try {
-        const response = await fetch('/api/currencies');
-        const data = await response.json();
         const fromCurrencyDropdown = document.getElementById('fromCurrency');
         const toCurrencyDropdown = document.getElementById('toCurrency');
+        await fetchCurrenciesAndFillSelect(fromCurrencyDropdown, toCurrencyDropdown);
         const currencyInfo = document.getElementById('currencyInfo');
         const resultField = document.getElementById('result');
 
@@ -26,7 +25,26 @@ async function fetchCurrencies() {
             resultField.value = '';
         }
 
-        Object.keys(data).sort().forEach(currencyCode => {
+        fromCurrencyDropdown.addEventListener('change', updateCurrencyInfo);
+        toCurrencyDropdown.addEventListener('change', updateCurrencyInfo);
+
+        // Initialize the currency info text
+        updateCurrencyInfo();
+
+    } catch (error) {
+        console.error('Error fetching the currencies:', error);
+    }
+}
+
+async function fetchCurrenciesAndFillSelect(fromCurrencyDropdown, toCurrencyDropdown) {
+    if (fromCurrencyDropdown === null || toCurrencyDropdown === null) {
+        fromCurrencyDropdown = document.getElementById('fromCurrency');
+        toCurrencyDropdown = document.getElementById('toCurrency');
+    }
+    try {
+        const data = await getCurrenciesData();
+
+        Object.keys(data).forEach(currencyCode => {
             if (data[currencyCode]) {
                 const optionFrom = document.createElement('option');
                 const optionTo = document.createElement('option');
@@ -35,7 +53,7 @@ async function fetchCurrencies() {
                 optionFrom.textContent = `${data[currencyCode]} (${currencyCode.toUpperCase()})`;
                 optionTo.textContent = `${data[currencyCode]} (${currencyCode.toUpperCase()})`;
 
-                // Set default values for USD and EUR
+                // Set default values for USD and CNH
                 if (currencyCode.toLowerCase() === 'usd') {
                     optionFrom.selected = true;
                 }
@@ -47,17 +65,31 @@ async function fetchCurrencies() {
                 toCurrencyDropdown.appendChild(optionTo);
             }
         });
-
-        fromCurrencyDropdown.addEventListener('change', updateCurrencyInfo);
-        toCurrencyDropdown.addEventListener('change', updateCurrencyInfo);
-
-        // Initialize the currency info text
-        updateCurrencyInfo();
-
     } catch (error) {
         console.error('Error fetching the currencies:', error);
     }
 }
+
+async function getCurrenciesData() {
+    try {
+        const response = await fetch('/api/currencies');
+        if (!response.ok) {
+            throw new Error('Network response was not ok.');
+        }
+        const data = await response.json();
+        return Object.keys(data)
+            .sort()
+            .filter(currencyCode => data[currencyCode]) // Assuming you want to filter out falsy values
+            .reduce((acc, currencyCode) => {
+                acc[currencyCode] = data[currencyCode];
+                return acc;
+            }, {});
+    } catch (error) {
+        console.error('Error fetching the currencies:', error);
+        return {}; // Return an empty object in case of error
+    }
+}
+
 
 async function convertCurrency(event) {
     event.preventDefault(); // prohibit form from auto submitting
